@@ -23,6 +23,8 @@ export default function QuizPage() {
     isCorrect: boolean;
     explanation?: string;
   }>({ show: false, isCorrect: false });
+  const [showWrongEffect, setShowWrongEffect] = useState(false);
+  const [shake, setShake] = useState(false);
 
   if (!quizSet) {
     return (
@@ -65,6 +67,18 @@ export default function QuizPage() {
         // 자동재생 차단 등의 이유로 실패할 수 있음
       });
     } else {
+      // 오답일 때 화면 흔들기 + 빨간 플래시
+      setShake(true);
+      setShowWrongEffect(true);
+
+      setTimeout(() => {
+        setShake(false);
+      }, 500);
+
+      setTimeout(() => {
+        setShowWrongEffect(false);
+      }, 500);
+
       // 오답 소리 재생
       const wrongSound = new Audio("/sounds/wrong.mp3");
       wrongSound.play().catch(() => {
@@ -99,12 +113,21 @@ export default function QuizPage() {
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col items-center justify-center p-8">
+    <div className="min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col items-center justify-center p-8 relative">
       {/* 배경 그라데이션 오버레이 */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.1),transparent_50%)]"></div>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(139,92,246,0.1),transparent_50%)]"></div>
 
-      <div className="relative z-10 max-w-6xl w-full">
+      {/* 오답 빨간 플래시 효과 */}
+      {showWrongEffect && (
+        <div className="fixed inset-0 bg-red-500 pointer-events-none z-50 animate-red-flash"></div>
+      )}
+
+      <div
+        className={`relative z-10 max-w-6xl w-full ${
+          shake ? "animate-shake" : ""
+        }`}
+      >
         <QuizHeader label={quizSet.label} />
 
         <QuizQuestion
