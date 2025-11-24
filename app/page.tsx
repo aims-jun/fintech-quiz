@@ -34,9 +34,6 @@ export default function Home() {
           <p className="text-5xl text-gray-600 font-semibold mb-4">
             퀴즈풀고 상품 받아가세요!
           </p>
-          <p className="text-2xl text-gray-400 mt-4 font-medium">
-            Human first. Always.
-          </p>
         </div>
 
         {/* 시작하기 버튼 */}
@@ -48,13 +45,6 @@ export default function Home() {
           >
             <span className="text-6xl font-black text-white">시작하기</span>
           </button>
-        </div>
-
-        {/* 하단 정보 */}
-        <div className="mt-20 text-center animate-fade-in-up animation-delay-600">
-          <p className="text-gray-500 text-xl">
-            핀테크 지식을 테스트하고 에임스에 대해 알아보세요
-          </p>
         </div>
       </div>
     </div>
