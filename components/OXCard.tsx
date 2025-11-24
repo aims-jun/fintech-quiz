@@ -24,44 +24,38 @@ export default function OXCard({
         w-full aspect-square
         rounded-3xl
         transform transition-all duration-300
-        hover:scale-110 hover:-translate-y-2
+        hover:scale-105 hover:-translate-y-2
         active:scale-95
         disabled:cursor-not-allowed
         ${
           isO
-            ? "bg-linear-to-br from-blue-400 via-blue-500 to-blue-600 hover:from-blue-500 hover:to-blue-700"
-            : "bg-linear-to-br from-red-400 via-red-500 to-red-600 hover:from-red-500 hover:to-red-700"
+            ? "bg-white border-[6px] border-blue-500 hover:border-blue-600 hover:bg-blue-50"
+            : "bg-white border-[6px] border-red-500 hover:border-red-600 hover:bg-red-50"
         }
         ${isSelected ? "scale-105 -translate-y-2" : ""}
         ${disabled ? "opacity-70" : ""}
-        shadow-2xl hover:shadow-[0_20px_60px_rgba(0,0,0,0.3)]
+        shadow-xl hover:shadow-2xl
       `}
     >
-      {/* 배경 패턴 효과 */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(255,255,255,0.3),transparent)]" />
-      </div>
-
-      {/* 반짝이는 효과 */}
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <div className="absolute top-0 left-0 right-0 h-1/2 bg-linear-to-b from-white/20 to-transparent" />
-      </div>
-
       {/* O 또는 X 텍스트 */}
       <div className="relative flex items-center justify-center h-full">
-        <span className="text-white font-black text-9xl drop-shadow-2xl group-hover:scale-110 transition-transform duration-300">
+        <span 
+          className={`font-black text-[12rem] group-hover:scale-110 transition-transform duration-300 ${
+            isO ? "text-blue-500" : "text-red-500"
+          }`}
+        >
           {type}
         </span>
       </div>
 
-      {/* 테두리 글로우 효과 */}
-      <div
-        className={`
-        absolute inset-0 rounded-3xl transition-opacity duration-300
-        ${isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100"}
-        ${isO ? "ring-4 ring-blue-300" : "ring-4 ring-red-300"}
-      `}
-      />
+      {/* 선택된 상태 표시 */}
+      {isSelected && (
+        <div
+          className={`absolute inset-0 rounded-3xl ${
+            isO ? "bg-blue-500/10" : "bg-red-500/10"
+          }`}
+        />
+      )}
     </button>
   );
 }

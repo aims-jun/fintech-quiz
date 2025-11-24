@@ -1,23 +1,24 @@
 "use client";
 
-import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import confetti from "canvas-confetti";
 import OXCard from "@/components/OXCard";
 import QuizHeader from "@/components/quiz/QuizHeader";
 import QuizQuestion from "@/components/quiz/QuizQuestion";
 import ResultScreen from "@/components/quiz/ResultScreen";
-import { getQuizSetByType } from "@/data/quizzes";
+import { getRandomQuizzes } from "@/data/quizzes";
 
 export default function QuizPage() {
-  const params = useParams();
   const router = useRouter();
-  const quizType = params.type as string;
-
-  const quizSet = getQuizSetByType(quizType);
+  
+  // 랜덤으로 5개의 퀴즈를 선택 (컴포넌트 마운트 시 한 번만 실행)
+  const randomQuizzes = useMemo(() => getRandomQuizzes(5), []);
+  
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<boolean | null>(null);
   const [showResult, setShowResult] = useState(false);
+  const [correctCount, setCorrectCount] = useState(0); // 맞춘 개수 카운팅
   const [feedback, setFeedback] = useState<{
     show: boolean;
     isCorrect: boolean;
@@ -26,26 +27,8 @@ export default function QuizPage() {
   const [showWrongEffect, setShowWrongEffect] = useState(false);
   const [shake, setShake] = useState(false);
 
-  if (!quizSet) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-2xl text-gray-600 mb-8">
-            퀴즈를 찾을 수 없습니다.
-          </p>
-          <button
-            onClick={() => router.push("/")}
-            className="px-8 py-4 bg-gray-800 hover:bg-gray-700 text-white rounded-xl font-semibold transition-all"
-          >
-            ← 홈으로 돌아가기
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  const currentQuiz = quizSet.quizzes[currentQuizIndex];
-  const totalQuizzes = quizSet.quizzes.length;
+  const currentQuiz = randomQuizzes[currentQuizIndex];
+  const totalQuizzes = randomQuizzes.length;
   const isLastQuiz = currentQuizIndex === totalQuizzes - 1;
 
   const handleSelect = (answer: boolean) => {
@@ -56,6 +39,7 @@ export default function QuizPage() {
 
     // 정답일 때 폭죽 터트리기! 🎉
     if (isCorrect) {
+      setCorrectCount((prev) => prev + 1); // 정답 카운트 증가
       confetti({
         particleCount: 100,
         spread: 70,
@@ -108,15 +92,26 @@ export default function QuizPage() {
   // 결과 화면
   if (showResult) {
     return (
-      <ResultScreen label={quizSet.label} onGoHome={() => router.push("/")} />
+      <ResultScreen
+        correctCount={correctCount}
+        totalQuizzes={totalQuizzes}
+        onGoHome={() => router.push("/")}
+      />
     );
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col items-center justify-center p-8 relative">
-      {/* 배경 그라데이션 오버레이 */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.1),transparent_50%)]"></div>
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(139,92,246,0.1),transparent_50%)]"></div>
+    <div className="min-h-screen bg-linear-to-br from-gray-50 via-white to-gray-50 flex flex-col items-center justify-center p-8 relative">
+      {/* 서브틀한 배경 패턴 */}
+      <div className="absolute inset-0 opacity-[0.03]">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `repeating-linear-gradient(0deg, #000 0px, #000 1px, transparent 1px, transparent 40px),
+                          repeating-linear-gradient(90deg, #000 0px, #000 1px, transparent 1px, transparent 40px)`,
+          }}
+        ></div>
+      </div>
 
       {/* 오답 빨간 플래시 효과 */}
       {showWrongEffect && (
@@ -124,11 +119,11 @@ export default function QuizPage() {
       )}
 
       <div
-        className={`relative z-10 max-w-6xl w-full ${
+        className={`relative z-10 max-w-[1600px] w-full ${
           shake ? "animate-shake" : ""
         }`}
       >
-        <QuizHeader label={quizSet.label} />
+        <QuizHeader />
 
         <QuizQuestion
           question={currentQuiz.question}
@@ -140,7 +135,7 @@ export default function QuizPage() {
         />
 
         {/* O/X 카드 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto mb-16">
           <OXCard
             type="O"
             onSelect={handleSelect}
@@ -159,7 +154,7 @@ export default function QuizPage() {
         <div className="text-center">
           <button
             onClick={() => router.push("/")}
-            className="px-8 py-4 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white rounded-xl font-semibold transition-all hover:shadow-lg"
+            className="px-12 py-6 bg-white border-4 border-gray-300 hover:border-gray-900 text-gray-900 rounded-2xl font-bold text-xl transition-all hover:shadow-lg"
           >
             ← 홈으로 돌아가기
           </button>
@@ -168,3 +163,4 @@ export default function QuizPage() {
     </div>
   );
 }
+

@@ -16,33 +16,33 @@ export default function QuizQuestion({
   onNext,
 }: QuizQuestionProps) {
   return (
-    <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl shadow-xl p-12 mb-12 relative">
-      <p className="text-3xl font-bold text-white text-center leading-relaxed">
+    <div className="bg-white border-4 border-gray-200 rounded-3xl shadow-xl p-16 mb-16 relative">
+      <p className="text-5xl font-bold text-gray-900 text-center leading-relaxed">
         {question}
       </p>
 
       {/* 피드백 및 다음 버튼 */}
       {showFeedback && (
         <div
-          className={`mt-8 p-6 rounded-2xl backdrop-blur-sm ${
+          className={`mt-12 p-10 rounded-2xl ${
             isCorrect
-              ? "bg-green-500/20 border-2 border-green-400/50"
-              : "bg-red-500/20 border-2 border-red-400/50"
+              ? "bg-green-50 border-4 border-green-500"
+              : "bg-red-50 border-4 border-red-500"
           }`}
         >
           <p
-            className={`text-2xl font-bold mb-2 ${
-              isCorrect ? "text-green-300" : "text-red-300"
+            className={`text-4xl font-bold mb-4 ${
+              isCorrect ? "text-green-700" : "text-red-700"
             }`}
           >
-            {isCorrect ? "정답입니다" : "틀렸습니다"}
+            {isCorrect ? "✓ 정답입니다" : "✗ 틀렸습니다"}
           </p>
           {explanation && (
-            <p className="text-lg text-gray-200 mb-4">{explanation}</p>
+            <p className="text-2xl text-gray-700 mb-6">{explanation}</p>
           )}
           <button
             onClick={onNext}
-            className="w-full mt-4 px-8 py-4 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white rounded-xl font-bold text-lg transition-all hover:shadow-lg"
+            className="w-full mt-6 px-12 py-6 bg-gray-900 hover:bg-gray-800 text-white rounded-2xl font-bold text-2xl transition-all hover:shadow-lg"
           >
             {isLastQuiz ? "결과 보기" : "다음 문제"}
           </button>
