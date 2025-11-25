@@ -11,10 +11,10 @@ import { getRandomQuizzes } from "@/data/quizzes";
 
 export default function QuizPage() {
   const router = useRouter();
-  
+
   // 랜덤으로 5개의 퀴즈를 선택 (컴포넌트 마운트 시 한 번만 실행)
   const randomQuizzes = useMemo(() => getRandomQuizzes(5), []);
-  
+
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<boolean | null>(null);
   const [showResult, setShowResult] = useState(false);
@@ -118,6 +118,28 @@ export default function QuizPage() {
         <div className="fixed inset-0 bg-red-500 pointer-events-none z-50 animate-red-flash"></div>
       )}
 
+      {/* 왼쪽 상단 뒤로가기 버튼 */}
+      <button
+        onClick={() => router.push("/")}
+        className="fixed top-6 left-6 z-20 p-3 bg-white border-2 border-gray-300 hover:border-gray-900 rounded-full shadow-md hover:shadow-lg transition-all group"
+        aria-label="홈으로 돌아가기"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={2.5}
+          stroke="currentColor"
+          className="w-6 h-6 text-gray-700 group-hover:text-gray-900 transition-colors"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+          />
+        </svg>
+      </button>
+
       <div
         className={`relative z-10 max-w-[1600px] w-full ${
           shake ? "animate-shake" : ""
@@ -134,33 +156,24 @@ export default function QuizPage() {
           onNext={handleNext}
         />
 
-        {/* O/X 카드 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto mb-16">
-          <OXCard
-            type="O"
-            onSelect={handleSelect}
-            isSelected={selectedAnswer === true}
-            disabled={feedback.show}
-          />
-          <OXCard
-            type="X"
-            onSelect={handleSelect}
-            isSelected={selectedAnswer === false}
-            disabled={feedback.show}
-          />
-        </div>
-
-        {/* 홈 버튼 */}
-        <div className="text-center">
-          <button
-            onClick={() => router.push("/")}
-            className="px-12 py-6 bg-white border-4 border-gray-300 hover:border-gray-900 text-gray-900 rounded-2xl font-bold text-xl transition-all hover:shadow-lg"
-          >
-            ← 홈으로 돌아가기
-          </button>
-        </div>
+        {/* O/X 카드 - 피드백 표시 중에는 숨김 */}
+        {!feedback.show && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+            <OXCard
+              type="O"
+              onSelect={handleSelect}
+              isSelected={selectedAnswer === true}
+              disabled={feedback.show}
+            />
+            <OXCard
+              type="X"
+              onSelect={handleSelect}
+              isSelected={selectedAnswer === false}
+              disabled={feedback.show}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
 }
-
