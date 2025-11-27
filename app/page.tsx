@@ -32,7 +32,7 @@ export default function Home() {
             <div className="w-6 h-6 bg-black rotate-45"></div>
           </div>
           <p className="text-5xl text-gray-600 font-semibold mb-4">
-            퀴즈풀고 상품 받아가세요!
+            퀴즈풀고 간식 받아가세요!
           </p>
         </div>
 

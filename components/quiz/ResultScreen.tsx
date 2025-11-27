@@ -13,15 +13,15 @@ export default function ResultScreen({
   const getReward = () => {
     if (correctCount >= 5) {
       return {
-        name: "머그컵",
-        emoji: "☕",
-        message: "완벽해요! 머그컵을 받아가세요!",
+        name: "간식 2개",
+        emoji: "🍫🍫",
+        message: "완벽해요! 간식 2개를 받아가세요!",
       };
     } else {
       return {
-        name: "초콜릿",
+        name: "간식",
         emoji: "🍫",
-        message: "초콜릿을 받아가세요!",
+        message: "간식을 받아가세요!",
       };
     }
   };
